@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightweight LLM Vector Store</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        svg { border: 1px solid #ccc; }
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Lightweight LLM Vector Store (2D Visualization)</h2>
+    <svg width="600" height="400"></svg>
+    <div class="tooltip"></div>
+    <script>
+        // Sample vector embeddings (precomputed from an LLM)
+        const data = [
+            { text: "Hello, world!", x: 0.1, y: 0.2 },
+            { text: "AI is amazing!", x: 0.5, y: 0.8 },
+            { text: "Chatbots are fun", x: 0.3, y: 0.4 },
+            { text: "Deep learning rocks", x: 0.9, y: 0.6 }
+        ];
+
+        const svg = d3.select("svg");
+        const width = +svg.attr("width"), height = +svg.attr("height");
+        const tooltip = d3.select(".tooltip");
+
+        // Scale functions
+        const xScale = d3.scaleLinear().domain([0, 1]).range([20, width - 20]);
+        const yScale = d3.scaleLinear().domain([0, 1]).range([height - 20, 20]);
+
+        // Draw points
+        svg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => xScale(d.x))
+            .attr("cy", d => yScale(d.y))
+            .attr("r", 6)
+            .attr("fill", "steelblue")
+            .on("mouseover", (event, d) => {
+                tooltip.style("display", "block")
+                    .html(d.text)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 10) + "px");
+            })
+            .on("mouseout", () => tooltip.style("display", "none"));
+    </script>
+</body>
+</html>
